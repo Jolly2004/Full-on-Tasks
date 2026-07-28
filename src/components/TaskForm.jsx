@@ -2,20 +2,9 @@ import React, { useState } from "react";
 
 const TaskForm = ({ addTask }) => {
   const [task, setTask] = useState("");
-  const [selectedDate, setSelectedDate] = useState(2);
+  const today = new Date().toISOString().split("T")[0];
 
-  const month = "October";
-  const year = 2023;
-
-  const dates = [
-    { day: "S", date: 29, muted: true },
-    { day: "M", date: 30, muted: true },
-    { day: "T", date: 1 },
-    { day: "W", date: 2 },
-    { day: "T", date: 3 },
-    { day: "F", date: 4 },
-    { day: "S", date: 5 },
-  ];
+const [selectedDate, setSelectedDate] = useState(today);
 
   const handleSubmit = () => {
     if (!task.trim()) return;
@@ -24,7 +13,7 @@ const TaskForm = ({ addTask }) => {
       id: Date.now(),
       text: task,
       completed: false,
-      date: `${month} ${selectedDate}, ${year}`,
+      date: selectedDate,
     });
 
     setTask("");
@@ -141,51 +130,61 @@ const TaskForm = ({ addTask }) => {
   }),
 };
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Quick Entry</h2>
+ return (
+  <div style={styles.container}>
+    <div style={styles.card}>
+      <h2 style={styles.heading}>Quick Entry</h2>
 
-        <div style={styles.inputBox}>
-          <span style={styles.plus}>⊕</span>
+      <div style={styles.inputBox}>
+        <span style={styles.plus}>⊕</span>
 
-          <textarea
-            rows="3"
-            placeholder="What needs to be done today?"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-            style={styles.textarea}
-          />
-        </div>
-
-        <button style={styles.button} onClick={handleSubmit}>
-          ＋ Add Task
-        </button>
+        <textarea
+          rows="3"
+          placeholder="What needs to be done today?"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          style={styles.textarea}
+        />
       </div>
 
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Schedule</h2>
-
-        <div style={styles.calendar}>
-          {dates.map((d) => (
-            <div key={d.date} style={styles.column}>
-              <span style={styles.day}>{d.day}</span>
-
-              <div
-                style={styles.date(
-                  selectedDate === d.date && !d.muted,
-                  d.muted
-                )}
-                onClick={() => !d.muted && setSelectedDate(d.date)}
-              >
-                {d.date}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <button style={styles.button} onClick={handleSubmit}>
+        ＋ Add Task
+      </button>
     </div>
-  );
+
+    <div style={styles.card}>
+      <h2 style={styles.heading}>Schedule</h2>
+
+      <input
+        type="date"
+        value={selectedDate}
+        min={today}
+        onChange={(e) => setSelectedDate(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px",
+          border: "1px solid #dbe4ff",
+          borderRadius: "12px",
+          fontSize: "15px",
+          fontFamily: "'Inter', sans-serif",
+          outline: "none",
+          marginTop: "10px",
+          boxSizing: "border-box",
+        }}
+      />
+
+      <p
+        style={{
+          marginTop: "15px",
+          color: "#6b7280",
+          fontSize: "14px",
+        }}
+      >
+        📅 Selected Date: <strong>{selectedDate}</strong>
+      </p>
+    </div>
+  </div>
+);
 };
 
 export default TaskForm;
