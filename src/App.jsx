@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import ProgressCards from "./components/ProgressCards";
 
-
 function App() {
-  const [tasks, setTasks] = useState([]);
+ const [tasks, setTasks] = useState(() => {
+  const savedTasks = localStorage.getItem("tasks");
+  return savedTasks ? JSON.parse(savedTasks) : [];
+});
+
+useEffect(() => {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}, [tasks]);
 
   // Add Task
   const addTask = (newTask) => {
     setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
-
+ 
   // Toggle Complete
   const toggleComplete = (id) => {
     setTasks((prevTasks) =>
@@ -72,7 +78,9 @@ return (
           tasks={tasks}
           toggleComplete={toggleComplete}
           deleteTask={deleteTask}
+            
         />
+        
       </div>
     </div>
   </div>
